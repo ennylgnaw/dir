@@ -1,0 +1,14 @@
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <dirent.h>
+
+int main(){
+  //  struct stat *file = malloc(sizeof(struct stat));
+  //  stat("./", file);
+  DIR *d;
+  d = opendir("./");
+
+  return 0;
+}
