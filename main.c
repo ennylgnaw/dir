@@ -12,12 +12,6 @@ void indent(int num_indents){
     printf("    ");
 }
 
-void print_string(char * ar){  
-  for(int i=0; ar[i]; i++)
-    printf("%c", ar[i]);
-  printf("\n");
-}
-
 void print_dir(char * dir, int dir_num){
   DIR *d;
   d = opendir(dir);
@@ -33,13 +27,17 @@ void print_dir(char * dir, int dir_num){
 	!strcmp(file->d_name, "..")==0){
       if (file->d_type == DT_DIR){
 	printf("/");
-	print_string(file->d_name);
-      
-	print_dir(file->d_name, dir_num+1);
+	printf("%s", file->d_name);
+	printf("\n");
+      	print_dir(file->d_name, dir_num+1);
       }
 
       else{
-	print_string(file->d_name);
+	printf("%s", file->d_name);
+	struct stat* fmeta = malloc(sizeof(struct stat));
+	stat(file->d_name, fmeta);
+	printf("-----------%d\n", fmeta->st_size);
+	
       }
     }
     
@@ -47,7 +45,8 @@ void print_dir(char * dir, int dir_num){
   }
 
 }
-int main(){
+
+int main(int c, char*){
   print_dir("./", 0);
   
   return 0;
