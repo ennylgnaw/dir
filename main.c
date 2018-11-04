@@ -4,23 +4,51 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/types.h>
+#include <string.h>
 #include <sys/dir.h>
 
-int main(){
-  //  struct stat *file = malloc(sizeof(struct stat));
-  //  stat("./", file);
+void indent(int num_indents){
+  for(int i=0; i<num_indents; i++)
+    printf("    ");
+}
+
+void print_string(char * ar){  
+  for(int i=0; ar[i]; i++)
+    printf("%c", ar[i]);
+  printf("\n");
+}
+
+void print_dir(char * dir, int dir_num){
   DIR *d;
-  d = opendir("./");
+  d = opendir(dir);
+   
+  if(!d){
+    return;
+  }
+ 
   struct dirent* file = readdir(d);
   while (file) {
-    if (file->d_type == DT_DIR)
-      printf("dir: ");
-    for (int i = 0; file->d_name[i]; i++)
-      printf("%c", file->d_name[i]);
-    printf("\n");
+    indent(dir_num);
+    if( !strcmp(file->d_name, ".")==0 &&
+	!strcmp(file->d_name, "..")==0){
+      if (file->d_type == DT_DIR){
+	printf("/");
+	print_string(file->d_name);
+      
+	print_dir(file->d_name, dir_num+1);
+      }
+
+      else{
+	print_string(file->d_name);
+      }
+    }
+    
     file = readdir(d);
   }
-  //printf("%c", file->d_name[2]);
-  //printf("%c", file->d_name[3]);
+
+}
+int main(){
+  print_dir("./", 0);
+  
   return 0;
 }
