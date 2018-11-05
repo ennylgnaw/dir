@@ -23,20 +23,20 @@ void rprint_dir(char * dir, int dir_num){
   struct dirent* file = readdir(d);
   while (file) {
     indent(dir_num);
-    if( !strcmp(file->d_name, ".")==0 &&
-	!strcmp(file->d_name, "..")==0){
+    if( !(strcmp(file->d_name, ".")==0) &&
+	!(strcmp(file->d_name, "..")==0)){
       if (file->d_type == DT_DIR){
-	printf("/");
+	printf("Directory: /");
 	printf("%s", file->d_name);
 	printf("\n");
       	rprint_dir(file->d_name, dir_num+1);
       }
 
       else{
-	printf("%s", file->d_name);
+	printf("Regular File: %s", file->d_name);
 	struct stat* fmeta = malloc(sizeof(struct stat));
 	stat(file->d_name, fmeta);
-	printf("-----------%d\n", fmeta->st_size);
+	printf("-----------%lld\n", fmeta->st_size);
 	
       }
     }
